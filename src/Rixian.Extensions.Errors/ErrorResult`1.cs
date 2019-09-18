@@ -33,6 +33,24 @@ namespace Rixian.Extensions.Errors
         private readonly ErrorBase error;
         private readonly int index;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorResult{T}"/> struct.
+        /// </summary>
+        /// <param name="value">The value to store.</param>
+        public ErrorResult(T value)
+            : this(0, value0: value)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorResult{T}"/> struct.
+        /// </summary>
+        /// <param name="error">The error to store.</param>
+        public ErrorResult(ErrorBase error)
+            : this(1, value1: error)
+        {
+        }
+
         private ErrorResult(int index, T value0 = default(T), ErrorBase value1 = default(ErrorBase))
         {
             this.index = index;
