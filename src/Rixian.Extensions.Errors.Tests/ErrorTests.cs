@@ -32,36 +32,36 @@ public class ErrorTests
     [Fact]
     public void ErrorResult_Converter_Implicit_Int_Success()
     {
-        ErrorResult<int> result = 123;
+        Result<int> result = 123;
 
-        result.Result.Should().Be(123);
+        result.Value.Should().Be(123);
     }
 
     [Fact]
     public void ErrorResult_Converter_Implicit_String_Success()
     {
         var value = "abc";
-        ErrorResult<string> result = value;
+        Result<string> result = value;
 
-        result.Result.Should().Be(value);
+        result.Value.Should().Be(value);
     }
 
     [Fact]
     public void ErrorResult_Helper_Interface_Success()
     {
         IFoo value = (IFoo)null;
-        ErrorResult<IFoo> result = ErrorResult.Create(value);
+        Result<IFoo> result = Result.Create(value);
 
-        result.Result.Should().Be(value);
+        result.Value.Should().Be(value);
     }
 
     [Fact]
     public void ErrorResult_Converter_Implicit_Class_Success()
     {
         var value = (Bar)null;
-        ErrorResult<Bar> result = value;
+        Result<Bar> result = value;
 
-        result.Result.Should().Be(value);
+        result.Value.Should().Be(value);
     }
 }
 
