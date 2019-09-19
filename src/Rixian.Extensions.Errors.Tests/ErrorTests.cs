@@ -71,8 +71,12 @@ internal interface IFoo
 {
 }
 
+#pragma warning disable CA1812
+#pragma warning disable SA1600
 internal class Bar
 {
 }
+#pragma warning restore SA1600
+#pragma warning restore CA1812
 #pragma warning restore SA1201 // Elements should appear in the correct order
 #pragma warning restore SA1402 // File may only contain a single type
