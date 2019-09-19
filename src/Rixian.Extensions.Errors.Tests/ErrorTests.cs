@@ -65,10 +65,14 @@ public class ErrorTests
     }
 }
 
-interface IFoo
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1201 // Elements should appear in the correct order
+internal interface IFoo
 {
 }
 
-class Bar
+internal class Bar
 {
 }
+#pragma warning restore SA1201 // Elements should appear in the correct order
+#pragma warning restore SA1402 // File may only contain a single type

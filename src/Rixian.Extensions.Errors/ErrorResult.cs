@@ -5,7 +5,7 @@ namespace Rixian.Extensions.Errors
 {
     /// <summary>
     /// Helper methods for the ErrorResult class.
-    /// See: https://stackoverflow.com/a/4280626/6640574
+    /// See: https://stackoverflow.com/a/4280626/6640574.
     /// </summary>
     public static class ErrorResult
     {
