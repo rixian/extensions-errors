@@ -72,7 +72,7 @@ namespace Rixian.Extensions.Errors
             {
                 if (this.index != 0)
                 {
-                    throw new InvalidOperationException($"Cannot return as T0 as result is T{this.index}");
+                    throw new InvalidOperationException(Properties.Resources.InvalidCastToValueErrorMessage);
                 }
 
                 return this.value;
@@ -93,7 +93,7 @@ namespace Rixian.Extensions.Errors
             {
                 if (this.index != 1)
                 {
-                    throw new InvalidOperationException($"Cannot return as T1 as result is T{this.index}");
+                    throw new InvalidOperationException(Properties.Resources.InvalidCastToErrorErrorMessage);
                 }
 
                 return this.error;
@@ -112,6 +112,18 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="value">The value.</param>
         public static implicit operator Result<T>(T value) => new Result<T>(0, value0: value);
+
+        /// <summary>
+        /// Converts a value into aa value.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        public static implicit operator T(Result<T> result) => result.Value;
+
+        /// <summary>
+        /// Converts a value into an ErrorResult.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        public static implicit operator ErrorBase(Result<T> result) => result.Error;
 #pragma warning restore CA2225 // Operator overloads have named alternates
 
         /// <summary>

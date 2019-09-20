@@ -63,6 +63,16 @@ public class ErrorTests
 
         result.Value.Should().Be(value);
     }
+
+    [Fact]
+    public void ErrorResult_Converter_Implicit_TargetClass_Success()
+    {
+        var value = (Bar)null;
+        Result<Bar> result = value;
+        Bar finalValue = result;
+
+        finalValue.Should().Be(value);
+    }
 }
 
 #pragma warning disable SA1402 // File may only contain a single type
