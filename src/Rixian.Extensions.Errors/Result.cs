@@ -127,6 +127,26 @@ namespace Rixian.Extensions.Errors
         }
 
         /// <summary>
+        /// Creates a new result with a null value.
+        /// </summary>
+        /// <typeparam name="T">The type of value.</typeparam>
+        /// <returns>The results with an null value.</returns>
+        public static Result<T> Null() where T : class
+        {
+            return new Result<T>((T)null);
+        }
+
+        /// <summary>
+        /// Creates a new result with default value for the type.
+        /// </summary>
+        /// <typeparam name="T">The type of value.</typeparam>
+        /// <returns>The results with a default value.</returns>
+        public static Result<T> Default()
+        {
+            return new Result<T>(default(T));
+        }
+
+        /// <summary>
         /// Executes one of the actions depending on the type of the stored value.
         /// </summary>
         /// <param name="onSuccess">The action to execute for a value.</param>
