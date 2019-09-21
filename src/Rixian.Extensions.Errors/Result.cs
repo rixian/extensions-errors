@@ -150,7 +150,6 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Creates a new result with default value for the type.
         /// </summary>
-        /// <typeparam name="T">The type of value.</typeparam>
         /// <returns>The results with a default value.</returns>
         public static Result Default()
         {
