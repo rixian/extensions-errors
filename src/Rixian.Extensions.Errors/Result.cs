@@ -131,7 +131,8 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <typeparam name="T">The type of value.</typeparam>
         /// <returns>The results with an null value.</returns>
-        public static Result<T> Null() where T : class
+        public static Result<T> Null<T>()
+            where T : class
         {
             return new Result<T>((T)null);
         }
@@ -141,7 +142,7 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <typeparam name="T">The type of value.</typeparam>
         /// <returns>The results with a default value.</returns>
-        public static Result<T> Default()
+        public static Result<T> Default<T>()
         {
             return new Result<T>(default(T));
         }
