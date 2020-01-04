@@ -11,6 +11,11 @@ namespace Rixian.Extensions.Errors
     /// </summary>
     public struct Result : IEquatable<Result>
     {
+        /// <summary>
+        /// Gets a result with no error.
+        /// </summary>
+        public static readonly Result Default = new Result(0);
+
         private readonly ErrorBase error;
         private readonly int index;
 
@@ -135,16 +140,6 @@ namespace Rixian.Extensions.Errors
             where T : class
         {
             return new Result<T>((T)null);
-        }
-
-        /// <summary>
-        /// Creates a new result with default value for the type.
-        /// </summary>
-        /// <typeparam name="T">The type of value.</typeparam>
-        /// <returns>The results with a default value.</returns>
-        public static Result<T> Default<T>()
-        {
-            return new Result<T>(default(T));
         }
 
         /// <summary>
