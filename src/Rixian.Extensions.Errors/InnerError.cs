@@ -11,6 +11,15 @@ namespace Rixian.Extensions.Errors
     public class InnerError
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="InnerError"/> class.
+        /// </summary>
+        /// <param name="code">The specific error code.</param>
+        public InnerError(string code)
+        {
+            this.Code = code;
+        }
+
+        /// <summary>
         /// Gets or sets a more specific error code for the error.
         /// </summary>
         [JsonProperty("code", NullValueHandling = NullValueHandling.Ignore)]
