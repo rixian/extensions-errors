@@ -213,7 +213,7 @@ namespace Rixian.Extensions.Errors
             {
                 case ResultType.Success: return FormatValue(typeof(T), this.value);
                 case ResultType.Fail: return FormatValue(typeof(Error), this.error);
-                default: return null;
+                default: return string.Empty;
             }
         }
 
