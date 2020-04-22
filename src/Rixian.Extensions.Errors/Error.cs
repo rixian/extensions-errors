@@ -3,27 +3,26 @@
 
 namespace Rixian.Extensions.Errors
 {
-    using System;
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
     /// <summary>
     /// The base error object.
     /// </summary>
-    public class ErrorBase
+#pragma warning disable CA1716 // Identifiers should not match keywords
+    public class Error
+#pragma warning restore CA1716 // Identifiers should not match keywords
     {
         /// <summary>
         /// Gets or sets the server-defined error codes.
         /// </summary>
-        [JsonRequired]
         [JsonProperty("code")]
         public string Code { get; set; }
 
         /// <summary>
         /// Gets or sets the human-readable error message.
         /// </summary>
-        [JsonRequired]
-        [JsonProperty("message")]
+        [JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }
 
         /// <summary>
@@ -36,21 +35,12 @@ namespace Rixian.Extensions.Errors
         /// Gets or sets the error details.
         /// </summary>
         [JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<ErrorBase> Details { get; set; }
+        public IEnumerable<Error> Details { get; set; }
 
         /// <summary>
         /// Gets or sets the inner error with more detailed information.
         /// </summary>
         [JsonProperty("innererror", NullValueHandling = NullValueHandling.Ignore)]
-        public InnerError InnerError { get; set; }
-
-        /// <summary>
-        /// Creates an <see cref="ErrorResponse"/> from this Error.
-        /// </summary>
-        /// <returns>The <see cref="ErrorResponse"/>.</returns>
-        public ErrorResponse ToResponse()
-        {
-            return new ErrorResponse(this);
-        }
+        public Error InnerError { get; set; }
     }
 }

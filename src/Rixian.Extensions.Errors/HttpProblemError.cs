@@ -4,14 +4,12 @@
 namespace Rixian.Extensions.Errors
 {
     using System;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Http problem type as an error, specifically "application/problem+json".
     /// See: https://tools.ietf.org/html/rfc7807 for details.
     /// </summary>
-    public class HttpProblemError : ErrorBase
+    public class HttpProblemError : Error
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpProblemError"/> class.

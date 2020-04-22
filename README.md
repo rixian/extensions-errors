@@ -1,26 +1,102 @@
-# Your Library
-
-***An awesome template for your awesome library***
+# Errors and Results
 
 [![NuGet package](https://img.shields.io/nuget/v/Rixian.Extensions.Errors.svg)](https://nuget.org/packages/Rixian.Extensions.Errors)
 
+## Overview
+
+This library provides base types for working with errors deliberate way within your applications. The main types found in the library are:
+
+-  `Error`
+-  `Result`/`Result<T>`
+-  `HttpProblem`
+
 ## Features
 
-* Follow the best and simplest patterns of build, pack and test with dotnet CLI.
-* Static analyzers: [FxCop](https://docs.microsoft.com/en-us/visualstudio/code-quality/fxcop-analyzers?view=vs-2019) and [StyleCop](https://github.com/DotNetAnalyzers/StyleCopAnalyzers)
-* Read-only source tree (builds to top-level bin/obj folders)
-* Auto-versioning (via [Nerdbank.GitVersioning](https://github.com/aarnott/nerdbank.gitversioning))
-* Azure Pipeline via YAML with all dependencies declared for long-term serviceability.
-* Testing on .NET Framework, multiple .NET Core versions
-* Testing on Windows, Linux and OSX
-* Code coverage published to Azure Pipelines
-* Code coverage published to codecov.io so GitHub PRs get code coverage results added as a PR comment
+-  The `Error` object provides an implementation of the error response in the [Microsoft REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#errorresponse--object)
+-  The `Result` and `Result<T>` objects provide a mechanism for methods to return either a value or an error.
+-  The `HttpProblem` class represents an HttpResponse of type `application/problem+json`. See the [RFC](https://tools.ietf.org/html/rfc7807)
+-  A [`Prelude`](#prelude) class is provided to add additional helper methods to make working with Errors and Results easier.
 
-## Consumption
+## Usage
 
-Once you've expanded this template for your own use, you should **run the `Expand-Template.ps1` script** to customize the template for your own project.
+### Error
 
-Further customize your repo by:
+The `Error` class provides the basic properties required in the [Microsoft REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#errorresponse--object). This class explicitly allows for subclassing in order to create predefined errors or add extra properties beyond the basics. For example, we provide the `UnhandledError` class which looks like this (simplified):
 
-1. Verify the license is suitable for your goal as it appears in the LICENSE and stylecop.json files and the Directory.Build.props file's `PackageLicenseExpression` property.
-1. Reset or replace the badges at the top of this file.
+```csharp
+public class UnhandledError : Error
+{
+    public UnhandledError()
+    {
+        this.Code = "unhandled";
+    }
+}
+```
+
+You can also add other properties to expand on the error as needed:
+
+```csharp
+public class InvalidUserError : Error
+{
+    public InvalidUserError(string username)
+    {
+        this.Code = "invalid_user";
+        this.UserName = username;
+    }
+
+    public string UserName { get; set; }
+}
+```
+
+### Results
+
+The `Result` and `Result<T>` classes are implementations of a discriminated union where it can either be an `Error` or a value. These classes exist to make error handling more explicit by having developers check if a `Result` contains an error before grabbing the value.
+
+AN example usage may look like this:
+```csharp
+public class Calc
+{
+    public Result<double> Add(double x, double y)
+    {
+        return x + y; // Implicit conversion to Result<double>
+    }
+
+    public Result<double> Divide(double numerator, double denominator)
+    {
+        if (denominator == 0)
+        {
+            Error error = Error("divide_by_zero"); // Method provided by the Prelude class
+            return error; // Implicit conversion to Result<double>.
+        }
+
+        return numerator / denominator;
+    }
+}
+```
+
+### Prelude
+
+The `Prelude` class makes use of the C# [using static directive](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/using-static). In your class add the following usings:
+
+```csharp
+using Rixian.Extensions.Errors;
+using static Rixian.Extensions.Errors.Prelude;
+```
+
+You now have access to the following:
+
+-  `Error()`
+-  `BadArgumentError()`
+-  `NullArgumentDisallowedError()`
+-  `NullValueDisallowedError()`
+-  `EmptyGuidDisallowedError()`
+-  `Result<T>()`
+-  `NullResult<T>()`
+-  `ErrorResult()`
+-  `ErrorResult<T>()`
+-  `RequireGuid()`
+-  `DefaultResult` (Readonly field)
+
+### HttpProblem
+
+The `HttpProblem` class and its sibling `HttpProblemError` are used for working with the [HTTP Problem RFC](https://tools.ietf.org/html/rfc7807). This class is intended to bridge the gap into the `Error` class to take advantage of those helpers.
