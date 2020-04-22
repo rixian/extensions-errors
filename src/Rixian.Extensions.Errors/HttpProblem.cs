@@ -3,10 +3,6 @@
 
 namespace Rixian.Extensions.Errors
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// Http problem type, specifically "application/problem+json".
     /// See: https://tools.ietf.org/html/rfc7807 for details.

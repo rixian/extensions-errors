@@ -5,6 +5,7 @@ using FluentAssertions;
 using Rixian.Extensions.Errors;
 using Xunit;
 using Xunit.Abstractions;
+using static Rixian.Extensions.Errors.Prelude;
 
 public class ErrorTests
 {
@@ -18,7 +19,7 @@ public class ErrorTests
     [Fact]
     public void AddOrSubtract()
     {
-        ErrorBase error = new ErrorBase
+        Error error = new Error
         {
             Code = "Test",
             Message = "Test",
@@ -32,6 +33,9 @@ public class ErrorTests
     [Fact]
     public void ErrorResult_Converter_Implicit_Int_Success()
     {
+        Result(123);
+        Error("Failed");
+
         Result<int> result = 123;
 
         result.Value.Should().Be(123);
@@ -50,7 +54,7 @@ public class ErrorTests
     public void ErrorResult_Helper_Interface_Success()
     {
         IFoo value = (IFoo)null;
-        Result<IFoo> result = Result.Create(value);
+        Result<IFoo> result = Result(value);
 
         result.Value.Should().Be(value);
     }

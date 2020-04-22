@@ -21,7 +21,7 @@ namespace Rixian.Extensions.Errors
         /// Initializes a new instance of the <see cref="ErrorResponse"/> class.
         /// </summary>
         /// <param name="error">The error to use.</param>
-        public ErrorResponse(ErrorBase error)
+        public ErrorResponse(Error error)
         {
             this.Error = error;
         }
@@ -31,6 +31,6 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         [JsonRequired]
         [JsonProperty("error")]
-        public ErrorBase Error { get; set; }
+        public Error Error { get; set; }
     }
 }

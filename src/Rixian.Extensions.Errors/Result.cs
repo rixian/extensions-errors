@@ -7,31 +7,37 @@ namespace Rixian.Extensions.Errors
 
     /// <summary>
     /// Represents a result that is either a success or an error.
-    /// See: https://stackoverflow.com/a/4280626/6640574.
+    /// See: https://stackoverflow.com/a/428ResultType.Success626/664ResultType.Success574.
     /// </summary>
-    public struct Result : IEquatable<Result>
+    public struct Result : IResult, IEquatable<Result>
     {
         /// <summary>
         /// Gets a result with no error.
         /// </summary>
-        public static readonly Result Default = new Result(0);
+        public static readonly Result Default = new Result(ResultType.Success);
 
-        private readonly ErrorBase error;
-        private readonly int index;
+        private readonly Error error;
+        private readonly ResultType resultType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> struct.
         /// </summary>
         /// <param name="error">The error to store.</param>
-        public Result(ErrorBase error)
-            : this(1, value1: error)
+        public Result(Error error)
+            : this(ResultType.Fail, error: error)
         {
         }
 
-        private Result(int index, ErrorBase value1 = default(ErrorBase))
+        private Result(ResultType resultType, Error error = default(Error))
         {
-            this.index = index;
-            this.error = value1;
+            this.resultType = resultType;
+            this.error = error;
+        }
+
+        private enum ResultType
+        {
+            Fail = 0,
+            Success,
         }
 
         /// <summary>
@@ -41,11 +47,11 @@ namespace Rixian.Extensions.Errors
         {
             get
             {
-                switch (this.index)
+                switch (this.resultType)
                 {
-                    case 0:
+                    case ResultType.Success:
                         return null;
-                    case 1:
+                    case ResultType.Fail:
                         return this.error;
                     default:
                         throw new InvalidOperationException();
@@ -56,36 +62,28 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Gets a value indicating whether the value is a result or not.
         /// </summary>
-        public bool IsSuccess => this.index == 0;
+        public bool IsSuccess => this.resultType == ResultType.Success;
 
         /// <summary>
         /// Gets a value indicating whether the value is an error or not.
         /// </summary>
-        public bool IsError => this.index == 1;
+        public bool IsFail => this.resultType == ResultType.Fail;
 
         /// <summary>
         /// Gets the error.
         /// </summary>
-        public ErrorBase Error
+        public Error Error
         {
             get
             {
-                if (this.index != 1)
+                if (this.resultType != ResultType.Fail)
                 {
-                    throw new InvalidOperationException($"Cannot return as T1 as result is T{this.index}");
+                    throw new InvalidOperationException($"Cannot return as TResultType.Fail as result is T{this.resultType}");
                 }
 
                 return this.error;
             }
         }
-
-#pragma warning disable CA2225 // Operator overloads have named alternates
-        /// <summary>
-        /// Converts an ErrorBase into an ErrorResult.
-        /// </summary>
-        /// <param name="error">The ErrorBase.</param>
-        public static implicit operator Result(ErrorBase error) => new Result(1, value1: error);
-#pragma warning restore CA2225 // Operator overloads have named alternates
 
         /// <summary>
         /// Determines if two instance of ErrorResult are equal.
@@ -126,7 +124,7 @@ namespace Rixian.Extensions.Errors
         /// <typeparam name="T">The type of value.</typeparam>
         /// <param name="error">The error.</param>
         /// <returns>The ErrorResponse.</returns>
-        public static Result<T> Create<T>(ErrorBase error)
+        public static Result<T> Create<T>(Error error)
         {
             return new Result<T>(error);
         }
@@ -147,15 +145,15 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="onSuccess">The action to execute for a value.</param>
         /// <param name="onError">The action to execute for an error.</param>
-        public void Switch(Action onSuccess, Action<ErrorBase> onError)
+        public void Switch(Action onSuccess, Action<Error> onError)
         {
-            if (this.index == 0 && onSuccess != null)
+            if (this.resultType == ResultType.Success && onSuccess != null)
             {
                 onSuccess();
                 return;
             }
 
-            if (this.index == 1 && onError != null)
+            if (this.resultType == ResultType.Fail && onError != null)
             {
                 onError(this.error);
                 return;
@@ -171,14 +169,14 @@ namespace Rixian.Extensions.Errors
         /// <param name="onSuccess">The mapping for a value.</param>
         /// <param name="onError">The mapping for an error.</param>
         /// <returns>The mapped result.</returns>
-        public TResult Match<TResult>(Func<TResult> onSuccess, Func<ErrorBase, TResult> onError)
+        public TResult Match<TResult>(Func<TResult> onSuccess, Func<Error, TResult> onError)
         {
-            if (this.index == 0 && onSuccess != null)
+            if (this.resultType == ResultType.Success && onSuccess != null)
             {
                 return onSuccess();
             }
 
-            if (this.index == 1 && onError != null)
+            if (this.resultType == ResultType.Fail && onError != null)
             {
                 return onError(this.error);
             }
@@ -200,10 +198,10 @@ namespace Rixian.Extensions.Errors
         /// <inheritdoc/>
         public override string ToString()
         {
-            switch (this.index)
+            switch (this.resultType)
             {
-                case 0: return string.Empty;
-                case 1: return FormatValue(typeof(ErrorBase), this.error);
+                case ResultType.Success: return string.Empty;
+                case ResultType.Fail: return FormatValue(typeof(Error), this.error);
             }
 
             return null;
@@ -215,12 +213,12 @@ namespace Rixian.Extensions.Errors
             unchecked
             {
                 int hashCode;
-                switch (this.index)
+                switch (this.resultType)
                 {
-                    case 0:
+                    case ResultType.Success:
                         hashCode = 0;
                         break;
-                    case 1:
+                    case ResultType.Fail:
                         hashCode = this.error?.GetHashCode() ?? 0;
                         break;
                     default:
@@ -228,22 +226,22 @@ namespace Rixian.Extensions.Errors
                         break;
                 }
 
-                return (hashCode * 397) ^ this.index;
+                return (hashCode * 397) ^ this.resultType.GetHashCode();
             }
         }
 
         /// <inheritdoc/>
         public bool Equals(Result other)
         {
-            if (this.index != other.index)
+            if (this.resultType != other.resultType)
             {
                 return false;
             }
 
-            switch (this.index)
+            switch (this.resultType)
             {
-                case 0: return true;
-                case 1: return Equals(this.error, other.error);
+                case ResultType.Success: return true;
+                case ResultType.Fail: return Equals(this.error, other.error);
                 default: return false;
             }
         }
