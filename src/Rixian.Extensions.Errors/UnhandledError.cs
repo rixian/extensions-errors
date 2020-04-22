@@ -18,7 +18,7 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         public UnhandledError()
         {
-            this.Code = "Unhandled";
+            this.Code = "unhandled";
         }
     }
 }
