@@ -6,16 +6,16 @@
 
 This library provides base types for working with errors deliberate way within your applications. The main types found in the library are:
 
-- `Error`
-- `Result`/`Result<T>`
-- `HttpProblem`
+-  `Error`
+-  `Result`/`Result<T>`
+-  `HttpProblem`
 
 ## Features
 
-- The `Error` object provides an implementation of the error response in the [Microsoft REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#errorresponse--object)
-- The `Result` and `Result<T>` objects provide a mechanism for methods to return either a value or an error.
-- The `HttpProblem` class represents an HttpResponse of type `application/problem+json`. See the [RFC](https://tools.ietf.org/html/rfc7807)
-- A [`Prelude`](#prelude) class is provided to add additional helper methods to make working with Errors and Results easier.
+-  The `Error` object provides an implementation of the error response in the [Microsoft REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#errorresponse--object)
+-  The `Result` and `Result<T>` objects provide a mechanism for methods to return either a value or an error.
+-  The `HttpProblem` class represents an HttpResponse of type `application/problem+json`. See the [RFC](https://tools.ietf.org/html/rfc7807)
+-  A [`Prelude`](#prelude) class is provided to add additional helper methods to make working with Errors and Results easier.
 
 ## Usage
 
@@ -85,17 +85,17 @@ using static Rixian.Extensions.Errors.Prelude;
 
 You now have access to the following:
 
-- `Error()`
-- `BadArgumentError()`
-- `NullArgumentDisallowedError()`
-- `NullValueDisallowedError()`
-- `EmptyGuidDisallowedError()`
-- `Result<T>()`
-- `NullResult<T>()`
-- `ErrorResult()`
-- `ErrorResult<T>()`
-- `RequireGuid()`
-- `DefaultResult` (Readonly field)
+-  `Error()`
+-  `BadArgumentError()`
+-  `NullArgumentDisallowedError()`
+-  `NullValueDisallowedError()`
+-  `EmptyGuidDisallowedError()`
+-  `Result<T>()`
+-  `NullResult<T>()`
+-  `ErrorResult()`
+-  `ErrorResult<T>()`
+-  `RequireGuid()`
+-  `DefaultResult` (Readonly field)
 
 ### HttpProblem
 

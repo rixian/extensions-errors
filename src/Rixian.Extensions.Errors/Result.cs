@@ -202,9 +202,8 @@ namespace Rixian.Extensions.Errors
             {
                 case ResultType.Success: return string.Empty;
                 case ResultType.Fail: return FormatValue(typeof(Error), this.error);
+                default: return null;
             }
-
-            return null;
         }
 
         /// <inheritdoc/>
