@@ -26,6 +26,7 @@ namespace Rixian.Extensions.Errors
             this.Message = string.Join(Environment.NewLine, problem.Title, problem.Detail);
             this.Status = problem.Status;
             this.Instance = problem.Instance;
+            this.Problem = problem;
         }
 
         /// <summary>
@@ -37,5 +38,10 @@ namespace Rixian.Extensions.Errors
         /// Gets or sets the problem instance.
         /// </summary>
         public string Instance { get; set; }
+
+        /// <summary>
+        /// Gets or sets the problem.
+        /// </summary>
+        public HttpProblem Problem { get; set; }
     }
 }
