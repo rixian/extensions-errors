@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <Description>Provides base types for working with errors deliberate way within your applications.</Description>
+    <PackageTags>errors problem result</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
