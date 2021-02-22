@@ -12,7 +12,7 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Gets the underlying value.
         /// </summary>
-        public object Value { get; }
+        public object? Value { get; }
 
         /// <summary>
         /// Gets a value indicating whether the value is an error or not.
@@ -23,7 +23,7 @@ namespace Rixian.Extensions.Errors
         /// Gets the error.
         /// </summary>
 #pragma warning disable CA1716 // Identifiers should not match keywords
-        public Error Error { get; }
+        public Error? Error { get; }
 #pragma warning restore CA1716 // Identifiers should not match keywords
     }
 }

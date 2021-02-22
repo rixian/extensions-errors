@@ -17,30 +17,30 @@ namespace Rixian.Extensions.Errors
         /// Gets or sets the server-defined error codes.
         /// </summary>
         [JsonProperty("code")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         /// <summary>
         /// Gets or sets the human-readable error message.
         /// </summary>
         [JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
         /// <summary>
         /// Gets or sets the error target.
         /// </summary>
         [JsonProperty("target", NullValueHandling = NullValueHandling.Ignore)]
-        public string Target { get; set; }
+        public string? Target { get; set; }
 
         /// <summary>
         /// Gets or sets the error details.
         /// </summary>
         [JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<Error> Details { get; set; }
+        public IEnumerable<Error>? Details { get; set; }
 
         /// <summary>
         /// Gets or sets the inner error with more detailed information.
         /// </summary>
         [JsonProperty("innererror", NullValueHandling = NullValueHandling.Ignore)]
-        public Error InnerError { get; set; }
+        public Error? InnerError { get; set; }
     }
 }

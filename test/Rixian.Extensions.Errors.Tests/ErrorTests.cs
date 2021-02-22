@@ -7,6 +7,8 @@ using Xunit;
 using Xunit.Abstractions;
 using static Rixian.Extensions.Errors.Prelude;
 
+#nullable disable
+
 public class ErrorTests
 {
     private readonly ITestOutputHelper logger;

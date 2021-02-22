@@ -31,6 +31,6 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         [JsonRequired]
         [JsonProperty("error")]
-        public Error Error { get; set; }
+        public Error? Error { get; set; }
     }
 }

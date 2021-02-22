@@ -37,7 +37,7 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Gets or sets the problem instance.
         /// </summary>
-        public string Instance { get; set; }
+        public string? Instance { get; set; }
 
         /// <summary>
         /// Gets or sets the problem.

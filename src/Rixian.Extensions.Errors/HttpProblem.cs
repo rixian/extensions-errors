@@ -38,7 +38,7 @@ namespace Rixian.Extensions.Errors
         /// The "title" string is advisory and included only for users who are not aware of the semantics of the URI and do not have the ability to discover them (e.g., offline log analysis).
         /// </remarks>
         [JsonProperty("title", Order = int.MinValue + 1, NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         /// <summary>
         /// Gets or sets the problem status.
@@ -68,7 +68,7 @@ namespace Rixian.Extensions.Errors
         /// Consumers SHOULD NOT parse the "detail" member for information; extensions are more suitable and less error-prone ways to obtain such information.
         /// </remarks>
         [JsonProperty("detail", Order = int.MinValue + 3, NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
-        public string Detail { get; set; }
+        public string? Detail { get; set; }
 
         /// <summary>
         /// Gets or sets the problem instance.
@@ -80,14 +80,14 @@ namespace Rixian.Extensions.Errors
         /// Note that the "instance" property accepts relative URIs; this means that they must be resolved relative to the document's base URI, as per[RFC3986], Section 5.
         /// </remarks>
         [JsonProperty("instance", Order = int.MinValue + 4, NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
-        public string Instance { get; set; }
+        public string? Instance { get; set; }
 
         /// <summary>
         /// Gets or sets the undefined extension attributes. Optional.
         /// </summary>
         [JsonExtensionData]
 #pragma warning disable CA2227 // Collection properties should be read only
-        public IDictionary<string, object> ExtensionAttributes { get; set; }
+        public IDictionary<string, object>? ExtensionAttributes { get; set; }
 #pragma warning restore CA2227 // Collection properties should be read only
     }
 }

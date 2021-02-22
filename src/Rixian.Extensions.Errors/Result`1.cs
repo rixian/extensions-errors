@@ -29,15 +29,15 @@ namespace Rixian.Extensions.Errors
     /// <typeparam name="T">The type of the result.</typeparam>
     public struct Result<T> : IResult, IEquatable<Result<T>>
     {
-        private readonly T value;
-        private readonly Error error;
+        private readonly T? value;
+        private readonly Error? error;
         private readonly ResultType resultType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Result{T}"/> struct.
         /// </summary>
         /// <param name="value">The value to store.</param>
-        public Result(T value)
+        public Result(T? value)
             : this(ResultType.Success, value: value)
         {
         }
@@ -51,7 +51,7 @@ namespace Rixian.Extensions.Errors
         {
         }
 
-        private Result(ResultType resultType, T value = default(T), Error error = default(Error))
+        private Result(ResultType resultType, T? value = default(T), Error? error = default(Error))
         {
             this.resultType = resultType;
             this.value = value;
@@ -72,7 +72,7 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Gets the result value.
         /// </summary>
-        public T Value
+        public T? Value
         {
             get
             {
@@ -93,7 +93,7 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Gets the error.
         /// </summary>
-        public Error Error
+        public Error? Error
         {
             get
             {
@@ -107,7 +107,7 @@ namespace Rixian.Extensions.Errors
         }
 
         /// <inheritdoc/>
-        object IResult.Value => this.Value;
+        object? IResult.Value => this.Value;
 
 #pragma warning disable CA2225 // Operator overloads have named alternates
         /// <summary>
@@ -126,7 +126,7 @@ namespace Rixian.Extensions.Errors
         /// Converts a value into aa value.
         /// </summary>
         /// <param name="result">The result.</param>
-        public static implicit operator T(Result<T> result) => result.Value;
+        public static implicit operator T?(Result<T> result) => result.Value;
 #pragma warning restore CA2225 // Operator overloads have named alternates
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="onValue">The action to execute for a value.</param>
         /// <param name="onError">The action to execute for an error.</param>
-        public void Switch(Action<T> onValue, Action<Error> onError)
+        public void Switch(Action<T?> onValue, Action<Error?> onError)
         {
             if (this.resultType == ResultType.Success && onValue != null)
             {
@@ -180,7 +180,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="onValue">The mapping for a value.</param>
         /// <param name="onError">The mapping for an error.</param>
         /// <returns>The mapped result.</returns>
-        public TResult Match<TResult>(Func<T, TResult> onValue, Func<Error, TResult> onError)
+        public TResult Match<TResult>(Func<T?, TResult> onValue, Func<Error?, TResult> onError)
         {
             if (this.resultType == ResultType.Success && onValue != null)
             {

@@ -35,7 +35,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="code">The error code.</param>
         /// <param name="innerError">The inner error.</param>
         /// <returns>The error.</returns>
-        public static Error Error(string code, Error innerError) => new Error
+        public static Error Error(string code, Error? innerError) => new Error
         {
             Code = code,
             InnerError = innerError,
@@ -47,7 +47,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="code">The error code.</param>
         /// <param name="message">The error message.</param>
         /// <returns>The error.</returns>
-        public static Error Error(string code, string message) => Error(code, message, target: null, details: null, innerError: null);
+        public static Error Error(string code, string? message) => Error(code, message, target: null, details: null, innerError: null);
 
         /// <summary>
         /// Creates an error object.
@@ -56,7 +56,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="message">The error message.</param>
         /// <param name="target">The target of the error.</param>
         /// <returns>The error.</returns>
-        public static Error Error(string code, string message, string target) => Error(code, message, target, details: null, innerError: null);
+        public static Error Error(string code, string? message, string? target) => Error(code, message, target, details: null, innerError: null);
 
         /// <summary>
         /// Creates an error object.
@@ -66,7 +66,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="target">The target of the error.</param>
         /// <param name="details">More detailed errors.</param>
         /// <returns>The error.</returns>
-        public static Error Error(string code, string message, string target, IEnumerable<Error> details) => Error(code, message, target, details, innerError: null);
+        public static Error Error(string code, string? message, string? target, IEnumerable<Error>? details) => Error(code, message, target, details, innerError: null);
 
         /// <summary>
         /// Creates an error object.
@@ -76,7 +76,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="target">The target of the error.</param>
         /// <param name="innerError">The inner error.</param>
         /// <returns>The error.</returns>
-        public static Error Error(string code, string message, string target, Error innerError) => Error(code, message, target, details: null, innerError);
+        public static Error Error(string code, string? message, string? target, Error? innerError) => Error(code, message, target, details: null, innerError);
 
         /// <summary>
         /// Creates an error object.
@@ -85,7 +85,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="message">The error message.</param>
         /// <param name="innerError">The inner error.</param>
         /// <returns>The error.</returns>
-        public static Error Error(string code, string message, Error innerError) => Error(code, message, target: null, details: null, innerError);
+        public static Error Error(string code, string? message, Error? innerError) => Error(code, message, target: null, details: null, innerError);
 
         /// <summary>
         /// Creates an error object.
@@ -94,7 +94,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="message">The error message.</param>
         /// <param name="details">More detailed errors.</param>
         /// <returns>The error.</returns>
-        public static Error Error(string code, string message, IEnumerable<Error> details) => Error(code, message, target: null, details, innerError: null);
+        public static Error Error(string code, string? message, IEnumerable<Error>? details) => Error(code, message, target: null, details, innerError: null);
 
         /// <summary>
         /// Creates an error object.
@@ -104,7 +104,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="details">More detailed errors.</param>
         /// <param name="innerError">The inner error.</param>
         /// <returns>The error.</returns>
-        public static Error Error(string code, string message, IEnumerable<Error> details, Error innerError) => Error(code, message, target: null, details, innerError);
+        public static Error Error(string code, string? message, IEnumerable<Error>? details, Error? innerError) => Error(code, message, target: null, details, innerError);
 
         /// <summary>
         /// Creates an error object.
@@ -115,7 +115,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="details">More detailed errors.</param>
         /// <param name="innerError">The inner error.</param>
         /// <returns>The error.</returns>
-        public static Error Error(string code, string message, string target, IEnumerable<Error> details, Error innerError) => new Error
+        public static Error Error(string code, string? message, string? target, IEnumerable<Error>? details, Error? innerError) => new Error
         {
             Code = code,
             Message = message,
@@ -130,7 +130,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="message">The error message.</param>
         /// <param name="argumentName">The name of the bad argument.</param>
         /// <returns>The error.</returns>
-        public static Error BadArgumentError(string message, string argumentName) => Error(ErrorCodes.BadArgument, message, argumentName);
+        public static Error BadArgumentError(string? message, string? argumentName) => Error(ErrorCodes.BadArgument, message, argumentName);
 
         /// <summary>
         /// Creates an error object for bad arguments.
@@ -139,7 +139,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="argumentName">The name of the bad argument.</param>
         /// <param name="innerError">The inner error.</param>
         /// <returns>The error.</returns>
-        public static Error BadArgumentError(string message, string argumentName, Error innerError) => Error(ErrorCodes.BadArgument, message, argumentName, innerError);
+        public static Error BadArgumentError(string? message, string? argumentName, Error? innerError) => Error(ErrorCodes.BadArgument, message, argumentName, innerError);
 
         /// <summary>
         /// Creates an error object for null arguments.
@@ -147,7 +147,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="message">The error message.</param>
         /// <param name="argumentName">The name of the null argument.</param>
         /// <returns>The error.</returns>
-        public static Error NullArgumentDisallowedError(string message, string argumentName) => Error(ErrorCodes.NullArgumentDisallowed, message, argumentName);
+        public static Error NullArgumentDisallowedError(string? message, string? argumentName) => Error(ErrorCodes.NullArgumentDisallowed, message, argumentName);
 
         /// <summary>
         /// Creates an error object for null arguments.
@@ -156,7 +156,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="argumentName">The name of the null argument.</param>
         /// <param name="innerError">The inner error.</param>
         /// <returns>The error.</returns>
-        public static Error NullArgumentDisallowedError(string message, string argumentName, Error innerError) => Error(ErrorCodes.NullArgumentDisallowed, message, argumentName, innerError);
+        public static Error NullArgumentDisallowedError(string? message, string? argumentName, Error? innerError) => Error(ErrorCodes.NullArgumentDisallowed, message, argumentName, innerError);
 
         /// <summary>
         /// Creates an error object for disallowed null values.
@@ -169,7 +169,7 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="innerError">The inner error.</param>
         /// <returns>The error.</returns>
-        public static Error NullValueDisallowedError(Error innerError) => Error(ErrorCodes.NullValueDisallowed, innerError);
+        public static Error NullValueDisallowedError(Error? innerError) => Error(ErrorCodes.NullValueDisallowed, innerError);
 
         /// <summary>
         /// Creates an error object for disallowed empty GUIDs.
@@ -182,6 +182,6 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="innerError">The inner error.</param>
         /// <returns>The error.</returns>
-        public static Error EmptyGuidDisallowedError(Error innerError) => Error(ErrorCodes.EmptyGuidDisallowed, innerError);
+        public static Error EmptyGuidDisallowedError(Error? innerError) => Error(ErrorCodes.EmptyGuidDisallowed, innerError);
     }
 }

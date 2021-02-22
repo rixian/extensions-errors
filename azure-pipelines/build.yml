@@ -1,34 +1,41 @@
 parameters:
   windowsPool: Hosted Windows 2019 with VS2019
+  includeMacOS:
 
 jobs:
 - job: Windows
   pool: ${{ parameters.windowsPool }}
   steps:
   - checkout: self
-    clean: true # "all" doesn't work, but "true" does, despite YAML docs
+    clean: true
   - template: install-dependencies.yml
 
-  - powershell: '& (azure-pipelines\Get-nbgv.ps1) cloud'
+  - powershell: '& (./azure-pipelines/Get-nbgv.ps1) cloud'
     displayName: Set build number
 
   - template: dotnet.yml
+  - template: expand-template.yml
 
 - job: Linux
   pool:
-    vmImage: Ubuntu 16.04
+    vmImage: Ubuntu 18.04
   steps:
   - checkout: self
-    clean: true # "all" doesn't work, but "true" does, despite YAML docs
+    clean: true
   - template: install-dependencies.yml
   - template: dotnet.yml
+  - template: expand-template.yml
 
 - job: macOS
+  condition: ${{ parameters.includeMacOS }}
   pool:
-    vmImage: macOS-latest
+    vmImage: macOS-10.15
   steps:
+  - checkout: self
+    clean: true
   - template: install-dependencies.yml
   - template: dotnet.yml
+  - template: expand-template.yml
 
 - job: WrapUp
   dependsOn:
@@ -36,11 +43,15 @@ jobs:
   - Linux
   - macOS
   pool:
-    vmImage: ubuntu-latest
+    vmImage: Ubuntu 18.04
   condition: succeededOrFailed()
   steps:
   - checkout: self
-    clean: true # "all" doesn't work, but "true" does, despite YAML docs
+    clean: true
   - template: install-dependencies.yml
+    parameters:
+      initArgs: -NoRestore
   - template: publish-codecoverage.yml
+    parameters:
+      includeMacOS: ${{ parameters.includeMacOS }}
   - template: publish-deployables.yml
