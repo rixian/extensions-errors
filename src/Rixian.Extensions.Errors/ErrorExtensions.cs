@@ -44,14 +44,14 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="result">The result.</param>
         /// <returns>The <see cref="ErrorResponse"/>.</returns>
-        public static ErrorResponse ToErrorResponse(this IResult result)
+        public static ErrorResponse? ToErrorResponse(this IResult result)
         {
             if (result is null)
             {
                 throw new System.ArgumentNullException(nameof(result));
             }
 
-            return result.Error.ToResponse();
+            return result.Error?.ToResponse();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Rixian.Extensions.Errors
                 throw new System.ArgumentNullException(nameof(result));
             }
 
-            return Prelude.ErrorResult<T>(result.Error);
+            return Prelude.ErrorResult<T>(result.Error!);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Rixian.Extensions.Errors
         /// <returns>The new result.</returns>
         public static Result<T> Cast<T>(this Result result)
         {
-            return Prelude.ErrorResult<T>(result.Error);
+            return Prelude.ErrorResult<T>(result.Error!);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Rixian.Extensions.Errors
         /// <returns>The new result.</returns>
         public static Result AsBasic<T>(this Result<T> result)
         {
-            return Prelude.ErrorResult(result.Error);
+            return Prelude.ErrorResult(result.Error!);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <CodeAnalysisRuleSet>..\shipping.ruleset</CodeAnalysisRuleSet>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <Description>Provides base types for working with errors deliberate way within your applications.</Description>
+    <PackageTags>errors problem result</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

@@ -16,7 +16,7 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         public static readonly Result Default = new Result(ResultType.Success);
 
-        private readonly Error error;
+        private readonly Error? error;
         private readonly ResultType resultType;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Rixian.Extensions.Errors
         {
         }
 
-        private Result(ResultType resultType, Error error = default(Error))
+        private Result(ResultType resultType, Error? error = default(Error))
         {
             this.resultType = resultType;
             this.error = error;
@@ -43,7 +43,7 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Gets the underlying value.
         /// </summary>
-        public object Value
+        public object? Value
         {
             get
             {
@@ -72,7 +72,7 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Gets the error.
         /// </summary>
-        public Error Error
+        public Error? Error
         {
             get
             {
@@ -137,7 +137,7 @@ namespace Rixian.Extensions.Errors
         public static Result<T> Null<T>()
             where T : class
         {
-            return new Result<T>((T)null);
+            return new Result<T>((T?)null);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="onSuccess">The action to execute for a value.</param>
         /// <param name="onError">The action to execute for an error.</param>
-        public void Switch(Action onSuccess, Action<Error> onError)
+        public void Switch(Action onSuccess, Action<Error?> onError)
         {
             if (this.resultType == ResultType.Success && onSuccess != null)
             {
@@ -169,7 +169,7 @@ namespace Rixian.Extensions.Errors
         /// <param name="onSuccess">The mapping for a value.</param>
         /// <param name="onError">The mapping for an error.</param>
         /// <returns>The mapped result.</returns>
-        public TResult Match<TResult>(Func<TResult> onSuccess, Func<Error, TResult> onError)
+        public TResult Match<TResult>(Func<TResult> onSuccess, Func<Error?, TResult> onError)
         {
             if (this.resultType == ResultType.Success && onSuccess != null)
             {

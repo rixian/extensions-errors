@@ -82,6 +82,6 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Gets or sets the error.
         /// </summary>
-        public Error Error { get; set; }
+        public Error? Error { get; set; }
     }
 }
