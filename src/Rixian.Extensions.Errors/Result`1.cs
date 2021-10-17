@@ -8,6 +8,7 @@ namespace Rixian.Extensions.Errors
     /// <summary>
     /// Represents a result that is either a value or an error.
     /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
     public sealed record Result<T> : Result
     {
         private readonly T? value;
@@ -124,7 +125,7 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="result">The Result instance.</param>
         /// <returns>The tuple containing the result values.</returns>
-        public static implicit operator (T?, Error?)(Result<T> result)
+        public static implicit operator (T? Value, Error? Err)(Result<T> result)
         {
             if (result.IsSuccess)
             {
@@ -145,15 +146,15 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="tuple">The tuple.</param>
         /// <returns>The Result containing the tuple values.</returns>
-        public static implicit operator Result<T>((T? t, Error? error) tuple)
+        public static implicit operator Result<T>((T? Value, Error? Err) tuple)
         {
-            if (tuple.error is null)
+            if (tuple.Err is null)
             {
-                return new Result<T>(tuple.t);
+                return new Result<T>(tuple.Value);
             }
             else
             {
-                return new Result<T>(tuple.error);
+                return new Result<T>(tuple.Err);
             }
         }
 #pragma warning restore CA2225 // Operator overloads have named alternates

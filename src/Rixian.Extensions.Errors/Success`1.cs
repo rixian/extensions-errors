@@ -8,6 +8,7 @@ namespace Rixian.Extensions.Errors
     /// <summary>
     /// Represents a result that is a value.
     /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
     public sealed record Success<T> : Result
     {
         private readonly T? value;
@@ -49,6 +50,6 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         /// <param name="success">The Success instance.</param>
         /// <returns>The tuple containing the result values.</returns>
-        public static implicit operator (T?, Error?)(Success<T> success) => (success.Value, default);
+        public static implicit operator (T? Value, Error? Err)(Success<T> success) => (success.Value, default);
     }
 }

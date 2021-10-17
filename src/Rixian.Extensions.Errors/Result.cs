@@ -11,6 +11,8 @@ namespace Rixian.Extensions.Errors
     /// </summary>
     public abstract record Result
     {
+        private static readonly Type SuccessType = typeof(Success<>);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> class.
         /// </summary>
@@ -42,6 +44,14 @@ namespace Rixian.Extensions.Errors
         /// </summary>
         public static Result Default { get; } = Null<object>();
 
+#pragma warning disable CA2225 // Operator overloads have named alternates
+        /// <summary>
+        /// Converts an Error instance to a Result.
+        /// </summary>
+        /// <param name="error">The error.</param>
+        public static implicit operator Result(Error error) => new Fail(error);
+#pragma warning restore CA2225 // Operator overloads have named alternates
+
         /// <summary>
         /// Casts the current Result instance to an instance of Success.
         /// </summary>
@@ -60,16 +70,6 @@ namespace Rixian.Extensions.Errors
         {
             return (Fail)this;
         }
-
-        private static readonly Type SuccessType = typeof(Success<>);
-
-#pragma warning disable CA2225 // Operator overloads have named alternates
-        /// <summary>
-        /// Converts an Error instance to a Result.
-        /// </summary>
-        /// <param name="error">The error.</param>
-        public static implicit operator Result(Error error) => new Fail(error);
-#pragma warning restore CA2225 // Operator overloads have named alternates
 
         /// <summary>
         /// Converts an object to a Result.
@@ -114,7 +114,7 @@ namespace Rixian.Extensions.Errors
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <param name="result">The Result.</param>
         /// <returns>The tuple containing the result values.</returns>
-        public static (T? value, Error? error) AsTuple<T>(Result result)
+        public static (T? Value, Error? Err) AsTuple<T>(Result result)
         {
             if (result.IsSuccess && result is Success<T> success)
             {
@@ -136,15 +136,15 @@ namespace Rixian.Extensions.Errors
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <param name="tuple">The tuple.</param>
         /// <returns>The Result containing the tuple values.</returns>
-        public static Result FromTuple<T>((T? t, Error? error) tuple)
+        public static Result FromTuple<T>((T? Value, Error? Err) tuple)
         {
-            if (tuple.error is null)
+            if (tuple.Err is null)
             {
-                return new Success<T>(tuple.t);
+                return new Success<T>(tuple.Value);
             }
             else
             {
-                return new Fail(tuple.error);
+                return new Fail(tuple.Err);
             }
         }
 
