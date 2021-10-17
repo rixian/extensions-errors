@@ -7,7 +7,7 @@
 This library provides base types for working with errors deliberate way within your applications. The main types found in the library are:
 
 -  `Error`
--  `Result`/`Result<T>`
+-  `Result`/`Result<T>/Success<T>/Fail`
 -  `HttpProblem`
 
 ## Features
@@ -48,6 +48,55 @@ public class InvalidUserError : Error
 }
 ```
 
+### Working with Errors
+
+This library provides two main ways of working with errors: Using the Result classes to encapsulate errors, and tuples for errors in the style of the Go language.
+
+#### Go language style
+
+In Go, errors are conventionally the last item in a tuple. In C# we would do that by transforming the return type of a method. For example, let's take the following method:
+```csharp
+public double Add(double x, double y)
+{
+    return x + y;
+}
+```
+
+Might look like this:
+```csharp
+public (double, Error?) Add(double x, double y)
+{
+	return (x + y, default);
+}
+```
+
+You can use this method in a way that closely resembles Go:
+```csharp
+var (result, err) = Add(5, 6);
+// OR
+(double result, Error? err) = Add(5, 6);
+```
+
+You would then check if `err` is null and then proceed:
+```csharp
+var (result, err) = Add(5, 6);
+if (err is null)
+{
+    // Do some error handling
+}
+else
+{
+    // Use the result
+}
+```
+
+If you choose to use this style of error handling, then this library only provides minimal help around creating and managing the tuples. Since you still need an error type, we recommend using the `Error` type in this library as a base.
+
+#### Note
+We do provide several ways for this tuple to interoperate with the Result classes, making it so you are not locked into a single way of propagating errors in your code.
+
+
+
 ### Results
 
 The `Result` and `Result<T>` classes are implementations of a discriminated union where it can either be an `Error` or a value. These classes exist to make error handling more explicit by having developers check if a `Result` contains an error before grabbing the value.
@@ -59,6 +108,11 @@ public class Calc
     public Result<double> Add(double x, double y)
     {
         return x + y; // Implicit conversion to Result<double>
+    }
+
+    public Success<double> AddGuarenteed(double x, double y)
+    {
+        return x + y; // Implicit conversion to Success<double>
     }
 
     public Result<double> Divide(double numerator, double denominator)
@@ -74,6 +128,14 @@ public class Calc
 }
 ```
 
+The main types used are:
+- `Result` - This is the base type that indicates in there is a success or fail.
+- `Success<T>` - Derives from `Result`, and indicates a success.
+- `Fail` - Derives from `Result`, and indicates a fail.
+- `Result<T>` - Derives from `Result` and indicates either a success or fail.
+
+You can easily convert between these types, and so you should consider using the specific versions when known (i.e. guarenteed success). YHou will also find methods to instantiate these on the `Result` class, such as: `Result.New<int>(5)`.
+
 ### Prelude
 
 The `Prelude` class makes use of the C# [using static directive](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/using-static). In your class add the following usings:
@@ -86,14 +148,13 @@ using static Rixian.Extensions.Errors.Prelude;
 You now have access to the following:
 
 -  `Error()`
+-  `Error<T>()`
 -  `BadArgumentError()`
 -  `NullArgumentDisallowedError()`
 -  `NullValueDisallowedError()`
 -  `EmptyGuidDisallowedError()`
 -  `Result<T>()`
 -  `NullResult<T>()`
--  `ErrorResult()`
--  `ErrorResult<T>()`
 -  `RequireGuid()`
 -  `DefaultResult` (Readonly field)
 

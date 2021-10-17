@@ -3,8 +3,6 @@
 
 namespace Rixian.Extensions.Errors
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// Provides helper methods for working with Errors and Results.
     /// </summary>
@@ -23,7 +21,7 @@ namespace Rixian.Extensions.Errors
         /// <returns>The result.</returns>
         public static Result<T> Result<T>(T item)
         {
-            return Rixian.Extensions.Errors.Result.Create(item);
+            return Rixian.Extensions.Errors.Result.New(item);
         }
 
         /// <summary>
@@ -43,13 +41,13 @@ namespace Rixian.Extensions.Errors
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <param name="innerError">The error.</param>
         /// <returns>The result.</returns>
-        public static Result<T> ErrorResult<T>(Error innerError) => Rixian.Extensions.Errors.Result.Create<T>(innerError);
+        public static Result<T> Error<T>(Error innerError) => Rixian.Extensions.Errors.Result.New<T>(innerError);
 
         /// <summary>
         /// Creates a result with an error.
         /// </summary>
         /// <param name="innerError">The error.</param>
         /// <returns>The result.</returns>
-        public static Result ErrorResult(Error innerError) => new Rixian.Extensions.Errors.Result(innerError);
+        public static Result Error(Error innerError) => Rixian.Extensions.Errors.Result.New(innerError);
     }
 }

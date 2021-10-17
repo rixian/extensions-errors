@@ -4,43 +4,48 @@
 namespace Rixian.Extensions.Errors
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The base error object.
     /// </summary>
 #pragma warning disable CA1716 // Identifiers should not match keywords
-    public class Error
+    public record Error
 #pragma warning restore CA1716 // Identifiers should not match keywords
     {
         /// <summary>
         /// Gets or sets the server-defined error codes.
         /// </summary>
-        [JsonProperty("code")]
+        [JsonPropertyName("code")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public string? Code { get; set; }
 
         /// <summary>
         /// Gets or sets the human-readable error message.
         /// </summary>
-        [JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("message")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Message { get; set; }
 
         /// <summary>
         /// Gets or sets the error target.
         /// </summary>
-        [JsonProperty("target", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("target")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Target { get; set; }
 
         /// <summary>
         /// Gets or sets the error details.
         /// </summary>
-        [JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("details")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IEnumerable<Error>? Details { get; set; }
 
         /// <summary>
         /// Gets or sets the inner error with more detailed information.
         /// </summary>
-        [JsonProperty("innererror", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("innererror")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Error? InnerError { get; set; }
     }
 }

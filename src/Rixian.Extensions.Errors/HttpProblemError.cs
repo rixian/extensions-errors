@@ -9,7 +9,7 @@ namespace Rixian.Extensions.Errors
     /// Http problem type as an error, specifically "application/problem+json".
     /// See: https://tools.ietf.org/html/rfc7807 for details.
     /// </summary>
-    public class HttpProblemError : Error
+    public record HttpProblemError : Error
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpProblemError"/> class.

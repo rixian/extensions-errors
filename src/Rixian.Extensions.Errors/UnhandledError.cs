@@ -6,7 +6,7 @@ namespace Rixian.Extensions.Errors
     /// <summary>
     /// Basic class for unhandled errors.
     /// </summary>
-    public class UnhandledError : Error
+    public record UnhandledError : Error
     {
         /// <summary>
         /// The default UnHandledError.

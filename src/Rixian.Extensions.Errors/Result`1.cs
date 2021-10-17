@@ -1,24 +1,6 @@
 ﻿// Copyright (c) Rixian. All rights reserved.
 // Licensed under the Apache License, Version 2.0 license. See LICENSE file in the project root for full license information.
 
-/***************************************************************************************
-*    Derived from: OneOf<T0, T1>
-*    Author: Harry McIntyre (mcintyre321)
-*    Date downloaded: 2019-09-17
-*    Commit: 1fb4ff16b87cc140d5b7c8d3fa73730749b590a0
-*    Location: https://github.com/mcintyre321/OneOf/commit/1fb4ff16b87cc140d5b7c8d3fa73730749b590a0
-*    License: MIT (https://github.com/mcintyre321/OneOf/blob/master/licence.md)
-*    Changes:
-*     --- Renamed class to ErrorResult.
-*     --- Fixed one of the types to IInnerError.
-*     --- Renamed properties and methods to be more specific.
-*     --- Added XML comments
-*     --- Added IEquatable<> interface
-*     --- Added equality overloads
-*     --- Removed extra methods.
-*
-***************************************************************************************/
-
 namespace Rixian.Extensions.Errors
 {
     using System;
@@ -26,48 +8,30 @@ namespace Rixian.Extensions.Errors
     /// <summary>
     /// Represents a result that is either a value or an error.
     /// </summary>
-    /// <typeparam name="T">The type of the result.</typeparam>
-    public struct Result<T> : IResult, IEquatable<Result<T>>
+    public sealed record Result<T> : Result
     {
         private readonly T? value;
         private readonly Error? error;
-        private readonly ResultType resultType;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Result{T}"/> struct.
+        /// Initializes a new instance of the <see cref="Result{T}"/> class.
         /// </summary>
         /// <param name="value">The value to store.</param>
         public Result(T? value)
-            : this(ResultType.Success, value: value)
+            : base(isSuccess: true)
         {
+            this.value = value;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Result{T}"/> struct.
+        /// Initializes a new instance of the <see cref="Result{T}"/> class.
         /// </summary>
         /// <param name="error">The error to store.</param>
         public Result(Error error)
-            : this(ResultType.Fail, error: error)
+            : base(isSuccess: false)
         {
-        }
-
-        private Result(ResultType resultType, T? value = default(T), Error? error = default(Error))
-        {
-            this.resultType = resultType;
-            this.value = value;
             this.error = error;
         }
-
-        private enum ResultType
-        {
-            Fail = 0,
-            Success,
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the value is a result or not.
-        /// </summary>
-        public bool IsSuccess => this.resultType == ResultType.Success;
 
         /// <summary>
         /// Gets the result value.
@@ -76,9 +40,9 @@ namespace Rixian.Extensions.Errors
         {
             get
             {
-                if (this.resultType != ResultType.Success)
+                if (this.IsFail)
                 {
-                    throw new InvalidOperationException(Properties.Resources.InvalidCastToValueErrorMessage);
+                    throw new InvalidOperationException("InvalidCastToValueErrorMessage");
                 }
 
                 return this.value;
@@ -86,87 +50,130 @@ namespace Rixian.Extensions.Errors
         }
 
         /// <summary>
-        /// Gets a value indicating whether the value is an error or not.
-        /// </summary>
-        public bool IsFail => this.resultType == ResultType.Fail;
-
-        /// <summary>
         /// Gets the error.
         /// </summary>
-        public Error? Error
+        public Error Error
         {
             get
             {
-                if (this.resultType != ResultType.Fail)
+                if (this.IsSuccess)
                 {
-                    throw new InvalidOperationException(Properties.Resources.InvalidCastToErrorErrorMessage);
+                    throw new InvalidOperationException("InvalidCastToErrorErrorMessage");
+                }
+
+                if (this.error is null)
+                {
+                    throw new System.NotSupportedException("Result is in an impossible state.");
                 }
 
                 return this.error;
             }
         }
 
-        /// <inheritdoc/>
-        object? IResult.Value => this.Value;
-
 #pragma warning disable CA2225 // Operator overloads have named alternates
         /// <summary>
-        /// Converts a value into an ErrorResult.
+        /// Converts a value into a Result instance.
         /// </summary>
-        /// <param name="value">The value.</param>
-        public static implicit operator Result<T>(T value) => new Result<T>(ResultType.Success, value: value, error: default);
+        /// <param name="t">The value.</param>
+        public static implicit operator Result<T>(T t) => new Result<T>(t);
 
         /// <summary>
-        /// Converts a value into an ErrorResult.
+        /// Converts an Error into a Result instance.
         /// </summary>
         /// <param name="error">The error.</param>
-        public static implicit operator Result<T>(Error error) => new Result<T>(ResultType.Fail, value: default, error: error);
+        public static implicit operator Result<T>(Error error) => new Result<T>(error);
 
         /// <summary>
-        /// Converts a value into aa value.
+        /// Converts a Result into a value. Throws if not a success result.
         /// </summary>
         /// <param name="result">The result.</param>
         public static implicit operator T?(Result<T> result) => result.Value;
+
+        /// <summary>
+        /// Converts a Result into an Error instance. Throws if not a fail result.
+        /// </summary>
+        /// <param name="result">The Error instance.</param>
+        public static implicit operator Error(Result<T> result) => result.Error;
+
+        /// <summary>
+        /// Converts a Result into a Fail instance. Throws if not a fail result.
+        /// </summary>
+        /// <param name="result">The Fail instance.</param>
+        public static implicit operator Fail(Result<T> result) => new Fail(result.Error);
+
+        /// <summary>
+        /// Converts a Fail into a Result instance.
+        /// </summary>
+        /// <param name="fail">The Fail instance.</param>
+        public static implicit operator Result<T>(Fail fail) => new Result<T>(fail.Error);
+
+        /// <summary>
+        /// Converts a Success into a Result.
+        /// </summary>
+        /// <param name="success">The Success instance.</param>
+        public static implicit operator Result<T>(Success<T> success) => new Result<T>(success.Value);
+
+        /// <summary>
+        /// Converts a Result instance into a Success. Throws if not a success result.
+        /// </summary>
+        /// <param name="result">The Success instance.</param>
+        public static implicit operator Success<T>(Result<T> result) => new Success<T>(result.Value);
+
+        /// <summary>
+        /// Converts a Result instance to a tuple.
+        /// </summary>
+        /// <param name="result">The Result instance.</param>
+        /// <returns>The tuple containing the result values.</returns>
+        public static implicit operator (T?, Error?)(Result<T> result)
+        {
+            if (result.IsSuccess)
+            {
+                return (result.Value, default);
+            }
+            else if (result.IsFail)
+            {
+                return (default, result.Error);
+            }
+            else
+            {
+                throw new System.NotSupportedException("Result is in an impossible state.");
+            }
+        }
+
+        /// <summary>
+        /// Converts a tuple to a Result instance.
+        /// </summary>
+        /// <param name="tuple">The tuple.</param>
+        /// <returns>The Result containing the tuple values.</returns>
+        public static implicit operator Result<T>((T? t, Error? error) tuple)
+        {
+            if (tuple.error is null)
+            {
+                return new Result<T>(tuple.t);
+            }
+            else
+            {
+                return new Result<T>(tuple.error);
+            }
+        }
 #pragma warning restore CA2225 // Operator overloads have named alternates
-
-        /// <summary>
-        /// Determines if two instance of ErrorResult are equal.
-        /// </summary>
-        /// <param name="left">The left value.</param>
-        /// <param name="right">The right value.</param>
-        /// <returns>The equality result.</returns>
-        public static bool operator ==(Result<T> left, Result<T> right)
-        {
-            return left.Equals(right);
-        }
-
-        /// <summary>
-        /// Determines if two instance of ErrorResult are not equal.
-        /// </summary>
-        /// <param name="left">The left value.</param>
-        /// <param name="right">The right value.</param>
-        /// <returns>The equality result.</returns>
-        public static bool operator !=(Result<T> left, Result<T> right)
-        {
-            return !(left == right);
-        }
 
         /// <summary>
         /// Executes one of the actions depending on the type of the stored value.
         /// </summary>
         /// <param name="onValue">The action to execute for a value.</param>
         /// <param name="onError">The action to execute for an error.</param>
-        public void Switch(Action<T?> onValue, Action<Error?> onError)
+        public void Switch(Action<T?> onValue, Action<Error> onError)
         {
-            if (this.resultType == ResultType.Success && onValue != null)
+            if (this.IsSuccess && onValue != null)
             {
-                onValue(this.value);
+                onValue(this.Value);
                 return;
             }
 
-            if (this.resultType == ResultType.Fail && onError != null)
+            if (this.IsFail && onError != null)
             {
-                onError(this.error);
+                onError(this.Error);
                 return;
             }
 
@@ -180,80 +187,35 @@ namespace Rixian.Extensions.Errors
         /// <param name="onValue">The mapping for a value.</param>
         /// <param name="onError">The mapping for an error.</param>
         /// <returns>The mapped result.</returns>
-        public TResult Match<TResult>(Func<T?, TResult> onValue, Func<Error?, TResult> onError)
+        public TResult Match<TResult>(Func<T?, TResult> onValue, Func<Error, TResult> onError)
         {
-            if (this.resultType == ResultType.Success && onValue != null)
+            if (this.IsSuccess && onValue != null)
             {
-                return onValue(this.value);
+                return onValue(this.Value);
             }
 
-            if (this.resultType == ResultType.Fail && onError != null)
+            if (this.IsFail && onError != null)
             {
-                return onError(this.error);
+                return onError(this.Error);
             }
 
             throw new InvalidOperationException();
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            return obj is Result<T> && this.Equals((Result<T>)obj);
-        }
-
-        /// <inheritdoc/>
         public override string ToString()
         {
-            switch (this.resultType)
+            if (this.IsSuccess)
             {
-                case ResultType.Success: return FormatValue(typeof(T), this.value);
-                case ResultType.Fail: return FormatValue(typeof(Error), this.error);
-                default: return string.Empty;
-            }
-        }
-
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode;
-                switch (this.resultType)
-                {
-                    case ResultType.Success:
-                        hashCode = this.value?.GetHashCode() ?? 0;
-                        break;
-                    case ResultType.Fail:
-                        hashCode = this.error?.GetHashCode() ?? 0;
-                        break;
-                    default:
-                        hashCode = 0;
-                        break;
-                }
-
-                return (hashCode * 397) ^ this.resultType.GetHashCode();
-            }
-        }
-
-        /// <inheritdoc/>
-        public bool Equals(Result<T> other)
-        {
-            if (this.resultType != other.resultType)
-            {
-                return false;
+                return FormatValue(typeof(T), this.value);
             }
 
-            switch (this.resultType)
+            if (this.IsFail)
             {
-                case ResultType.Success: return Equals(this.value, other.value);
-                case ResultType.Fail: return Equals(this.error, other.error);
-                default: return false;
+                return FormatValue(typeof(Error), this.error);
             }
+
+            return base.ToString();
         }
 
         private static string FormatValue<TValue>(Type type, TValue value) => $"{type.FullName}: {value?.ToString()}";

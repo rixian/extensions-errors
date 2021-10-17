@@ -4,7 +4,7 @@
 namespace Rixian.Extensions.Errors
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Http problem type, specifically "application/problem+json".
@@ -25,7 +25,7 @@ namespace Rixian.Extensions.Errors
         ///
         /// Note that the "type" property accepts relative URIs; this means that they must be resolved relative to the document's base URI, as per[RFC3986], Section 5.
         /// </remarks>
-        [JsonProperty("type", Order = int.MinValue)]
+        [JsonPropertyName("type")]
         public string Type { get; set; } = "about:blank";
 
         /// <summary>
@@ -37,7 +37,8 @@ namespace Rixian.Extensions.Errors
         ///
         /// The "title" string is advisory and included only for users who are not aware of the semantics of the URI and do not have the ability to discover them (e.g., offline log analysis).
         /// </remarks>
-        [JsonProperty("title", Order = int.MinValue + 1, NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        [JsonPropertyName("title")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull & JsonIgnoreCondition.WhenWritingDefault)]
         public string? Title { get; set; }
 
         /// <summary>
@@ -54,7 +55,8 @@ namespace Rixian.Extensions.Errors
         /// and when message bodies persist without HTTP information.
         /// Generic HTTP software will still use the HTTP status code.
         /// </remarks>
-        [JsonProperty("status", Order = int.MinValue + 2, NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        [JsonPropertyName("status")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull & JsonIgnoreCondition.WhenWritingDefault)]
         public int? Status { get; set; }
 
         /// <summary>
@@ -67,7 +69,8 @@ namespace Rixian.Extensions.Errors
         ///
         /// Consumers SHOULD NOT parse the "detail" member for information; extensions are more suitable and less error-prone ways to obtain such information.
         /// </remarks>
-        [JsonProperty("detail", Order = int.MinValue + 3, NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        [JsonPropertyName("detail")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull & JsonIgnoreCondition.WhenWritingDefault)]
         public string? Detail { get; set; }
 
         /// <summary>
@@ -79,7 +82,8 @@ namespace Rixian.Extensions.Errors
         ///
         /// Note that the "instance" property accepts relative URIs; this means that they must be resolved relative to the document's base URI, as per[RFC3986], Section 5.
         /// </remarks>
-        [JsonProperty("instance", Order = int.MinValue + 4, NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        [JsonPropertyName("instance")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull & JsonIgnoreCondition.WhenWritingDefault)]
         public string? Instance { get; set; }
 
         /// <summary>

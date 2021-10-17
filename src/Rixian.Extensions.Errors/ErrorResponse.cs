@@ -3,7 +3,7 @@
 
 namespace Rixian.Extensions.Errors
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The top level error response object.
@@ -29,8 +29,8 @@ namespace Rixian.Extensions.Errors
         /// <summary>
         /// Gets or sets the error.
         /// </summary>
-        [JsonRequired]
-        [JsonProperty("error")]
+        [JsonPropertyName("error")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public Error? Error { get; set; }
     }
 }
