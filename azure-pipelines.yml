@@ -1,6 +1,8 @@
 trigger:
+  batch: true
   branches:
     include:
+    - main
     - master
     - validate/*
     - release/*
