@@ -9,7 +9,7 @@ namespace Rixian.Extensions.Errors
     /// Represents a result that is either a value or an error.
     /// </summary>
     /// <typeparam name="T">The type of the value.</typeparam>
-    public sealed record Result<T> : Result
+    public sealed record Result<T> : Result, ISuccess<T>, IFail
     {
         private readonly T? value;
         private readonly Error? error;
@@ -41,9 +41,9 @@ namespace Rixian.Extensions.Errors
         {
             get
             {
-                if (this.IsFail)
+                if (this.IsSuccess == false)
                 {
-                    throw new InvalidOperationException("InvalidCastToValueErrorMessage");
+                    throw new InvalidOperationException(Properties.Resources.InvalidCastToValueErrorMessage);
                 }
 
                 return this.value;
@@ -59,7 +59,7 @@ namespace Rixian.Extensions.Errors
             {
                 if (this.IsSuccess)
                 {
-                    throw new InvalidOperationException("InvalidCastToErrorErrorMessage");
+                    throw new InvalidOperationException(Properties.Resources.InvalidCastToErrorErrorMessage);
                 }
 
                 if (this.error is null)
@@ -131,7 +131,7 @@ namespace Rixian.Extensions.Errors
             {
                 return (result.Value, default);
             }
-            else if (result.IsFail)
+            else if (result.IsSuccess == false)
             {
                 return (default, result.Error);
             }
@@ -159,50 +159,6 @@ namespace Rixian.Extensions.Errors
         }
 #pragma warning restore CA2225 // Operator overloads have named alternates
 
-        /// <summary>
-        /// Executes one of the actions depending on the type of the stored value.
-        /// </summary>
-        /// <param name="onValue">The action to execute for a value.</param>
-        /// <param name="onError">The action to execute for an error.</param>
-        public void Switch(Action<T?> onValue, Action<Error> onError)
-        {
-            if (this.IsSuccess && onValue != null)
-            {
-                onValue(this.Value);
-                return;
-            }
-
-            if (this.IsFail && onError != null)
-            {
-                onError(this.Error);
-                return;
-            }
-
-            throw new InvalidOperationException();
-        }
-
-        /// <summary>
-        /// Performs a mapping depending on the type of the stored value.
-        /// </summary>
-        /// <typeparam name="TResult">The resultant type.</typeparam>
-        /// <param name="onValue">The mapping for a value.</param>
-        /// <param name="onError">The mapping for an error.</param>
-        /// <returns>The mapped result.</returns>
-        public TResult Match<TResult>(Func<T?, TResult> onValue, Func<Error, TResult> onError)
-        {
-            if (this.IsSuccess && onValue != null)
-            {
-                return onValue(this.Value);
-            }
-
-            if (this.IsFail && onError != null)
-            {
-                return onError(this.Error);
-            }
-
-            throw new InvalidOperationException();
-        }
-
         /// <inheritdoc/>
         public override string ToString()
         {
@@ -210,13 +166,10 @@ namespace Rixian.Extensions.Errors
             {
                 return FormatValue(typeof(T), this.value);
             }
-
-            if (this.IsFail)
+            else
             {
                 return FormatValue(typeof(Error), this.error);
             }
-
-            return base.ToString();
         }
 
         private static string FormatValue<TValue>(Type type, TValue value) => $"{type.FullName}: {value?.ToString()}";

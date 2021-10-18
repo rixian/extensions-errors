@@ -8,7 +8,7 @@ namespace Rixian.Extensions.Errors
     /// <summary>
     /// Represents a result that is a fail.
     /// </summary>
-    public sealed record Fail : Result
+    public sealed record Fail : Result, IFail
     {
         private readonly Error error;
 
@@ -22,9 +22,7 @@ namespace Rixian.Extensions.Errors
             this.error = error;
         }
 
-        /// <summary>
-        /// Gets the error.
-        /// </summary>
+        /// <inheritdoc/>
         public Error Error
         {
             get

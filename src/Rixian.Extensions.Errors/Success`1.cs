@@ -9,7 +9,7 @@ namespace Rixian.Extensions.Errors
     /// Represents a result that is a value.
     /// </summary>
     /// <typeparam name="T">The type of the value.</typeparam>
-    public sealed record Success<T> : Result
+    public sealed record Success<T> : Result, ISuccess<T>
     {
         private readonly T? value;
 
@@ -23,14 +23,12 @@ namespace Rixian.Extensions.Errors
             this.value = value;
         }
 
-        /// <summary>
-        /// Gets the result value.
-        /// </summary>
+        /// <inheritdoc/>
         public T? Value
         {
             get
             {
-                if (this.IsFail)
+                if (this.IsSuccess == false)
                 {
                     throw new InvalidOperationException("InvalidCastToValueErrorMessage");
                 }
